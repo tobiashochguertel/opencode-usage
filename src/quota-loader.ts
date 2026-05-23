@@ -143,14 +143,30 @@ export async function loadMultiAccountThresholds(): Promise<MultiAccountThreshol
 
 /**
  * Load quota from antigravity accounts file
- * Path: ~/.config/opencode/antigravity-accounts.json
+ * Paths (in order of precedence):
+ * - ~/.config/opencode/antigravity-accounts.json
+ * - ~/.local/share/opencode-antigravity/accounts.json
  * Note: remainingFraction is inverted (0 = exhausted, 1 = full)
  */
 export async function loadAntigravityQuota(): Promise<QuotaSnapshot[]> {
-  const path = join(homedir(), ".config/opencode/antigravity-accounts.json");
-  const data = await readJsonFile<AntigravityAccountsFile>(path);
+  const paths = [
+    join(homedir(), ".config/opencode/antigravity-accounts.json"),
+    join(homedir(), ".local/share/opencode-antigravity/accounts.json"),
+  ];
+  const data = await readJsonFileFromPaths<AntigravityAccountsFile>(paths);
 
-  if (!data?.accounts?.length) {
+  if (!data) {
+    return [
+      {
+        source: "antigravity",
+        label: "Antigravity",
+        used: 0,
+        error: "No accounts",
+      },
+    ];
+  }
+
+  if (!data.accounts?.length) {
     return [
       {
         source: "antigravity",
