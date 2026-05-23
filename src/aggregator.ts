@@ -82,7 +82,10 @@ export function filterByDays(
   days: number
 ): Map<string, DailyStats> {
   const cutoffDate = new Date();
-  cutoffDate.setDate(cutoffDate.getDate() - days + 1);
+  // When days is 0, we want only today's data
+  // When days is 1, we want today + yesterday (last 1 day)
+  // When days is N, we want last N days including today
+  cutoffDate.setDate(cutoffDate.getDate() - days);
   const cutoffStr = cutoffDate.toISOString().split("T")[0];
 
   const filtered = new Map<string, DailyStats>();
