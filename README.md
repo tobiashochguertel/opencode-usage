@@ -124,6 +124,28 @@ Requires OpenCode v1.2.0+ (SQLite storage). It aggregates token usage by day and
 
 If you're using OpenCode with a Claude Max/Pro subscription or OpenCode Zen credits, the actual cost to you is your subscription fee, not the API-equivalent cost shown here. The cost column shows what the equivalent API usage would cost for reference.
 
+## Merged Branches
+
+The following feature branches have been merged into this fork's main branch:
+
+### fix/ctrlc-exit-hanging
+- **Fixed**: Terminal hanging when pressing Ctrl+C to exit the CLI in all dashboard modes
+- **Changes**:
+  - `dashboard.ts`: Added proper stdin cleanup before exit
+  - `index.ts`: Added SIGINT handler for watch mode
+  - `dashboard-solid.tsx`: Added explicit Ctrl+C handling in keyboard handler
+  - `.gitignore`: Added `.devin/` to ignore AI agent workspace
+  - `exit-handling.test.ts`: Added comprehensive tests for exit handling (4 new tests)
+- **Commits**: 8a86526 (fix), 211d312 (tests)
+
+### fix/pre-existing-test-failures
+- **Fixed**: 8 failing tests across 2 test files
+- **Changes**:
+  - `aggregator.ts`: Fixed filterByDays cutoff calculation for days=0
+  - `quota-loader.ts`: Added dual path support for antigravity accounts file
+  - `quota-loader.test.ts`: Updated test paths and cleanup
+- **Commit**: 236788e
+
 ## License
 
 MIT
